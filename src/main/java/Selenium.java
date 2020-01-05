@@ -19,23 +19,48 @@ public class Selenium {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
+    public static void waitForURL(String url) {
+        WebDriverWait wait = new WebDriverWait(browser, WAIT_TIME_SEC);
+        wait.until(ExpectedConditions.urlToBe(url));
+    }
+
     public static void close() {
         browser.close();
     }
 
-    public static void main(String [] args) {
-        setup();
+    public static void loginToSherdog(String login, String password) {
         browser.get("https://forums.sherdog.com");
-        WebElement login = browser.findElement(By.linkText("Log in or Sign up"));
-        waitForElement(login);
-        login.click();
+        WebElement loginButton = browser.findElement(By.linkText("Log in or Sign up"));
+        waitForElement(loginButton);
+        loginButton.click();
         WebElement inputLogin = browser.findElement(By.cssSelector("input[name=\"login\"]"));
         WebElement inputPassword = browser.findElement(By.cssSelector("input[name=\"password\"]"));
         waitForElement(inputLogin);
         waitForElement(inputPassword);
-        inputLogin.sendKeys("civerx@gmail.com");
-        inputPassword.sendKeys("individual11");
+        inputLogin.sendKeys(login);
+        inputPassword.sendKeys(password);
         inputPassword.submit();
+    }
+
+    public static void registerSherdog(String login, String password) {
+        browser.get("https://forums.sherdog.com");
+        WebElement loginButton = browser.findElement(By.linkText("Log in or Sign up"));
+        waitForElement(loginButton);
+        loginButton.click();
+        WebElement inputLogin = browser.findElement(By.cssSelector("input[name=\"login\"]"));
+        WebElement inputNotRegistered = browser.findElement(By.xpath("//*[@id=\"ctrl_not_registered\"]"));
+        waitForElement(inputNotRegistered);
+        inputNotRegistered.click();
+        inputLogin.sendKeys(login);
+        inputLogin.submit();
+        WebElement inputPassword = browser.findElement(By.xpath("/html/body/div[2]/div[3]/div/div/form/fieldset[1]/dl[1]/dd/input"));
+        inputPassword.sendKeys(password);
+    }
+
+    public static void main(String [] args) {
+        setup();
+        //loginToSherdog("civerx@gmail.com", "individual11");
+        registerSherdog("testName1", "testPassword1");
 
         //close();
     }
